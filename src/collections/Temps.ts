@@ -1,5 +1,9 @@
-import type { HTMLConvertersFunction } from '@payloadcms/richtext-lexical/html'
+import {
+  convertLexicalToHTML,
+  type HTMLConvertersFunction,
+} from '@payloadcms/richtext-lexical/html'
 import type { CollectionConfig } from 'payload'
+import { ContentWithMedia } from '@/blocks/contentWithMedia'
 
 import {
   BlocksFeature,
@@ -7,7 +11,14 @@ import {
   lexicalEditor,
   lexicalHTMLField,
   type SerializedBlockNode,
+  UploadFeature,
 } from '@payloadcms/richtext-lexical'
+
+type NodeTypes = DefaultNodeTypes
+
+const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
+  ...defaultConverters,
+})
 
 export const Temps: CollectionConfig = {
   slug: 'temps',
@@ -22,44 +33,32 @@ export const Temps: CollectionConfig = {
       required: true,
     },
     {
-      name: 'content',
-      label: 'Content',
-      type: 'text',
+      name: 'media',
+      type: 'upload',
+      relationTo: 'media',
     },
-    // {
-    //   name: 'customRichText',
-    //   type: 'richText',
-    //   editor: lexicalEditor({
-    //     features: ({ defaultFeatures }) => [
-    //       ...defaultFeatures,
-    //       BlocksFeature({
-    //         blocks: [
-    //           {
-    //             interfaceName: 'MyTextBlock',
-    //             slug: 'myTextBlock',
-    //             fields: [
-    //               {
-    //                 name: 'text',
-    //                 type: 'text',
-    //               },
-    //             ],
-    //           },
-    //         ],
-    //       }),
-    //     ],
-    //   }),
-    // },
-    // lexicalHTMLField({
-    //   htmlFieldName: 'customRichText_html',
-    //   lexicalFieldName: 'customRichText',
-    //   // can pass in additional converters or override default ones
-    //   converters: (({ defaultConverters }) => ({
-    //     ...defaultConverters,
-    //     blocks: {
-    //       myTextBlock: ({ node, providedCSSString }) =>
-    //         `<div style="background-color: red;${providedCSSString}">${node.fields.text}</div>`,
-    //     },
-    //   })) as HTMLConvertersFunction<DefaultNodeTypes | SerializedBlockNode<MyTextBlock>>,
-    // }),
+    {
+      type: 'richText',
+      name: 'content',
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [...defaultFeatures, UploadFeature()],
+      }),
+    },
+    {
+      name: 'html',
+      type: 'text',
+      admin: { hidden: true },
+    },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        if (data.content !== originalDoc.content) {
+          const html = convertLexicalToHTML({ converters: htmlConverters, data: data.content })
+          data.html = html
+        }
+        return data
+      },
+    ],
+  },
 }

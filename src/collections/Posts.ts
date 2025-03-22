@@ -1,6 +1,7 @@
 import type { MyInlineBlock, MyTextBlock } from '@/payload-types'
 import type { CollectionConfig } from 'payload'
 import richText from '@/fields/richText'
+import { ContentWithMedia } from '@/blocks/contentWithMedia'
 
 import {
   BlocksFeature,
@@ -61,18 +62,7 @@ export const Posts: CollectionConfig = {
           ...defaultFeatures,
           UploadFeature(),
           BlocksFeature({
-            blocks: [
-              {
-                interfaceName: 'Dung Dep Gai',
-                slug: 'dungDepTrai',
-                fields: [
-                  {
-                    name: 'text',
-                    type: 'text',
-                  },
-                ],
-              },
-            ],
+            blocks: [ContentWithMedia],
           }),
           FixedToolbarFeature(),
         ],

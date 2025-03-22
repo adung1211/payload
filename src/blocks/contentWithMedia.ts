@@ -1,5 +1,10 @@
-import type { Block } from 'payload'
-import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { Block } from 'payload'
+import {
+  BlocksFeature,
+  HTMLConverterFeature,
+  lexicalEditor,
+  lexicalHTML,
+} from '@payloadcms/richtext-lexical'
 
 export const ContentWithMedia: Block = {
   slug: 'contentWithMedia',
@@ -8,6 +13,8 @@ export const ContentWithMedia: Block = {
     singular: 'Content with Media Block',
     plural: 'Content with Media Blocks',
   },
+  // imageURL: 'https://google.com/path/to/image',
+  // imageAltText: '',
   fields: [
     {
       type: 'richText',
@@ -16,6 +23,7 @@ export const ContentWithMedia: Block = {
         features: ({ defaultFeatures }) => [...defaultFeatures],
       }),
     },
+
     {
       type: 'upload',
       name: 'image',

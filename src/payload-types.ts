@@ -166,7 +166,23 @@ export interface Post {
 export interface Temp {
   id: string;
   title: string;
-  content?: string | null;
+  media?: (string | null) | Media;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  html?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -176,7 +192,7 @@ export interface Temp {
  */
 export interface Media {
   id: string;
-  alt?: string | null;
+  alt: string;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -188,32 +204,6 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    card?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    tablet?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -312,7 +302,9 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface TempsSelect<T extends boolean = true> {
   title?: T;
+  media?: T;
   content?: T;
+  html?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -333,40 +325,6 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        card?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        tablet?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -402,13 +360,29 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Dung Dep Gai".
+ * via the `definition` "ContentWithMedia".
  */
-export interface DungDepGai {
-  text?: string | null;
+export interface ContentWithMedia {
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  image?: (string | null) | Media;
+  textPosition?: ('Left' | 'Right') | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'dungDepTrai';
+  blockType: 'contentWithMedia';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
