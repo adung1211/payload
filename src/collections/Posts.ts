@@ -1,7 +1,6 @@
-import type { MyInlineBlock, MyTextBlock } from '@/payload-types'
+import type { ContentWithMedia } from '@/payload-types'
 import type { CollectionConfig } from 'payload'
 import richText from '@/fields/richText'
-import { ContentWithMedia } from '@/blocks/contentWithMedia'
 
 import {
   BlocksFeature,
@@ -20,18 +19,21 @@ import {
   convertLexicalToHTML,
   type HTMLConvertersFunction,
 } from '@payloadcms/richtext-lexical/html'
-import React from 'react'
 
 type NodeTypes =
   | DefaultNodeTypes
-  | SerializedBlockNode<MyTextBlock>
-  | SerializedInlineBlockNode<MyInlineBlock>
+  | SerializedBlockNode<ContentWithMedia>
 
 const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   blocks: {
-    dungDepTrai: ({ node, providedCSSString }) => `<img src="./img.png>`,
-    UploadFeature: ({ node, providedCSSString }) => `<img src="./img.png>`,
+    contentWithMedia: ({node})  => {
+      // Check if image is an object (Media) and access properties safely
+      console.log('node:', node.fields?.image);
+      const url = node.fields?.url;
+      const filename =  node.fields?.filename;
+      return `<div class="content-with-media"><img src="${url}" alt="${filename}" /></div>`;
+    },
   },
 })
 
@@ -62,7 +64,37 @@ export const Posts: CollectionConfig = {
           ...defaultFeatures,
           UploadFeature(),
           BlocksFeature({
-            blocks: [ContentWithMedia],
+            blocks: [
+              {
+                slug: 'contentWithMedia',
+                interfaceName: 'ContentWithMedia',
+                labels: {
+                  singular: 'Content with Media Block',
+                  plural: 'Content with Media Blocks',
+                },
+                fields: [
+                  {
+                    type: 'upload',
+                    name: 'image',
+                    relationTo: 'media',
+                  },
+                  {
+                    type:'text',
+                    name: 'filename',
+                    admin: {
+                      readOnly: true,
+                    },
+                  },
+                  {
+                    type: 'text',
+                    name: 'url',
+                    admin: {
+                      readOnly: true,
+                    },
+                  }
+                ],
+              }
+            ],
           }),
           FixedToolbarFeature(),
         ],
@@ -76,12 +108,39 @@ export const Posts: CollectionConfig = {
   ],
   hooks: {
     beforeChange: [
-      ({ data, originalDoc }) => {
-        if (data.richText !== originalDoc.richText) {
-          const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText })
-          data.content = html
+      async ({ data, originalDoc, req }) => {
+        console.log('hehehehehe:');
+        console.log('heeeee:');
+        for (const block of data.richText.root.children) {
+          console.log('iioooe:');
+          if (block.type === 'block' && block.fields?.image) {
+            console.log('jtrktrkeee:');
+            try {
+              const mediaDoc = await req.payload.findByID({
+                collection: 'media',
+                id: block.fields.image,
+              });
+              console.log('mediaDoc:', mediaDoc);
+              if (mediaDoc) {
+                const imageFilename = mediaDoc.filename;
+                const imageUrl = mediaDoc.url;
+                console.log('imageFilename:', imageFilename);
+                console.log('imageUrl:', imageUrl);
+                block.fields.filename = imageFilename;
+                block.fields.url = imageUrl;
+              }
+            } catch (error) {
+              console.error('Error fetching media:', error);
+            }
+          }
         }
-        return data
+        if (data.richText !== originalDoc.richText) {
+          console.log('yyyyyye:');
+          const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText });
+          data.content = html;
+          
+        }
+        return data;
       },
     ],
   },

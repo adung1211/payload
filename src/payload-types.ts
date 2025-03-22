@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -363,23 +364,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  * via the `definition` "ContentWithMedia".
  */
 export interface ContentWithMedia {
-  content?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
   image?: (string | null) | Media;
-  textPosition?: ('Left' | 'Right') | null;
+  filename?: string | null;
+  url?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'contentWithMedia';

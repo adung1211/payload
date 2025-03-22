@@ -13,26 +13,26 @@ export const ContentWithMedia: Block = {
     singular: 'Content with Media Block',
     plural: 'Content with Media Blocks',
   },
-  // imageURL: 'https://google.com/path/to/image',
-  // imageAltText: '',
   fields: [
-    {
-      type: 'richText',
-      name: 'content',
-      editor: lexicalEditor({
-        features: ({ defaultFeatures }) => [...defaultFeatures],
-      }),
-    },
-
     {
       type: 'upload',
       name: 'image',
       relationTo: 'media',
     },
     {
-      type: 'radio',
-      name: 'textPosition',
-      options: ['Left', 'Right'],
+      type:'text',
+      name: 'filename',
+      admin: {
+        readOnly: true,
+      },
     },
+    {
+      type:'text',
+      name: 'url',
+      admin: {
+        readOnly: true,
+      },
+    },
+
   ],
 }
