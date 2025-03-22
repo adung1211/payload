@@ -109,23 +109,16 @@ export const Posts: CollectionConfig = {
   hooks: {
     beforeChange: [
       async ({ data, originalDoc, req }) => {
-        console.log('hehehehehe:');
-        console.log('heeeee:');
         for (const block of data.richText.root.children) {
-          console.log('iioooe:');
           if (block.type === 'block' && block.fields?.image) {
-            console.log('jtrktrkeee:');
             try {
               const mediaDoc = await req.payload.findByID({
                 collection: 'media',
                 id: block.fields.image,
               });
-              console.log('mediaDoc:', mediaDoc);
               if (mediaDoc) {
                 const imageFilename = mediaDoc.filename;
                 const imageUrl = mediaDoc.url;
-                console.log('imageFilename:', imageFilename);
-                console.log('imageUrl:', imageUrl);
                 block.fields.filename = imageFilename;
                 block.fields.url = imageUrl;
               }
@@ -135,7 +128,6 @@ export const Posts: CollectionConfig = {
           }
         }
         if (data.richText !== originalDoc.richText) {
-          console.log('yyyyyye:');
           const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText });
           data.content = html;
           
