@@ -20,19 +20,17 @@ import {
   type HTMLConvertersFunction,
 } from '@payloadcms/richtext-lexical/html'
 
-type NodeTypes =
-  | DefaultNodeTypes
-  | SerializedBlockNode<ContentWithMedia>
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<ContentWithMedia>
 
 const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
   blocks: {
-    contentWithMedia: ({node})  => {
+    contentWithMedia: ({ node }) => {
       // Check if image is an object (Media) and access properties safely
-      console.log('node:', node.fields?.image);
-      const url = node.fields?.url;
-      const filename =  node.fields?.filename;
-      return `<div class="content-with-media"><img src="${url}" alt="${filename}" /></div>`;
+      console.log('node:', node.fields?.image)
+      const filename = node.fields?.filename
+      // const filename =  node.fields?.filename;
+      return `<div class="content-with-media"><img src="${process.env.S3_API}${filename}" /></div>`
     },
   },
 })
@@ -79,7 +77,7 @@ export const Posts: CollectionConfig = {
                     relationTo: 'media',
                   },
                   {
-                    type:'text',
+                    type: 'text',
                     name: 'filename',
                     admin: {
                       readOnly: true,
@@ -91,9 +89,9 @@ export const Posts: CollectionConfig = {
                     admin: {
                       readOnly: true,
                     },
-                  }
+                  },
                 ],
-              }
+              },
             ],
           }),
           FixedToolbarFeature(),
@@ -115,24 +113,23 @@ export const Posts: CollectionConfig = {
               const mediaDoc = await req.payload.findByID({
                 collection: 'media',
                 id: block.fields.image,
-              });
+              })
               if (mediaDoc) {
-                const imageFilename = mediaDoc.filename;
-                const imageUrl = mediaDoc.url;
-                block.fields.filename = imageFilename;
-                block.fields.url = imageUrl;
+                const imageFilename = mediaDoc.filename
+                const imageUrl = mediaDoc.url
+                block.fields.filename = imageFilename
+                block.fields.url = imageUrl
               }
             } catch (error) {
-              console.error('Error fetching media:', error);
+              console.error('Error fetching media:', error)
             }
           }
         }
         if (data.richText !== originalDoc.richText) {
-          const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText });
-          data.content = html;
-          
+          const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText })
+          data.content = html
         }
-        return data;
+        return data
       },
     ],
   },

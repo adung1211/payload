@@ -54,7 +54,6 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
-  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -167,8 +166,7 @@ export interface Post {
 export interface Temp {
   id: string;
   title: string;
-  media?: (string | null) | Media;
-  content?: {
+  richText?: {
     root: {
       type: string;
       children: {
@@ -183,7 +181,7 @@ export interface Temp {
     };
     [k: string]: unknown;
   } | null;
-  html?: string | null;
+  content?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -303,9 +301,8 @@ export interface PostsSelect<T extends boolean = true> {
  */
 export interface TempsSelect<T extends boolean = true> {
   title?: T;
-  media?: T;
+  richText?: T;
   content?: T;
-  html?: T;
   updatedAt?: T;
   createdAt?: T;
 }
