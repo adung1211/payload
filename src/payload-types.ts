@@ -54,6 +54,7 @@ export type SupportedTimezones =
   | 'Asia/Singapore'
   | 'Asia/Tokyo'
   | 'Asia/Seoul'
+  | 'Australia/Brisbane'
   | 'Australia/Sydney'
   | 'Pacific/Guam'
   | 'Pacific/Noumea'
@@ -67,7 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
-    posts: Post;
+    Posts: Post;
     temps: Temp;
     media: Media;
     'payload-locked-documents': PayloadLockedDocument;
@@ -77,7 +78,7 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
-    posts: PostsSelect<false> | PostsSelect<true>;
+    Posts: PostsSelect<false> | PostsSelect<true>;
     temps: TempsSelect<false> | TempsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -135,10 +136,11 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts".
+ * via the `definition` "Posts".
  */
 export interface Post {
   id: string;
+  thumbnail: string | Media;
   title: string;
   richText?: {
     root: {
@@ -156,32 +158,7 @@ export interface Post {
     [k: string]: unknown;
   } | null;
   content?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "temps".
- */
-export interface Temp {
-  id: string;
-  title: string;
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  content?: string | null;
+  thumbnail_url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -206,6 +183,34 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "temps".
+ */
+export interface Temp {
+  id: string;
+  thumbnail: string | Media;
+  title: string;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  content?: string | null;
+  thumbnail_url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -216,7 +221,7 @@ export interface PayloadLockedDocument {
         value: string | User;
       } | null)
     | ({
-        relationTo: 'posts';
+        relationTo: 'Posts';
         value: string | Post;
       } | null)
     | ({
@@ -286,12 +291,14 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "posts_select".
+ * via the `definition` "Posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
+  thumbnail?: T;
   title?: T;
   richText?: T;
   content?: T;
+  thumbnail_url?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -300,9 +307,11 @@ export interface PostsSelect<T extends boolean = true> {
  * via the `definition` "temps_select".
  */
 export interface TempsSelect<T extends boolean = true> {
+  thumbnail?: T;
   title?: T;
   richText?: T;
   content?: T;
+  thumbnail_url?: T;
   updatedAt?: T;
   createdAt?: T;
 }

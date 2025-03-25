@@ -20,19 +20,20 @@ export const ContentWithMedia: Block = {
       relationTo: 'media',
     },
     {
-      type:'text',
+      type: 'text',
       name: 'filename',
       admin: {
         readOnly: true,
+        hidden: true,
       },
     },
     {
-      type:'text',
+      type: 'text',
       name: 'url',
       admin: {
         readOnly: true,
+        hidden: true,
       },
     },
-
   ],
 }

@@ -1,4 +1,3 @@
-import type { ContentWithMedia } from '@/payload-types'
 import type { CollectionConfig } from 'payload'
 import richText from '@/fields/richText'
 
@@ -19,8 +18,10 @@ import {
   convertLexicalToHTML,
   type HTMLConvertersFunction,
 } from '@payloadcms/richtext-lexical/html'
+import { ContentWithMedia } from '@/blocks/contentWithMedia'
+import type { ContentWithMedia as ContentWithMediaType } from '@/payload-types'
 
-type NodeTypes = DefaultNodeTypes | SerializedBlockNode<ContentWithMedia>
+type NodeTypes = DefaultNodeTypes | SerializedBlockNode<ContentWithMediaType>
 
 const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }) => ({
   ...defaultConverters,
@@ -28,9 +29,9 @@ const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }
     contentWithMedia: ({ node }) => {
       // Check if image is an object (Media) and access properties safely
       console.log('node:', node.fields?.image)
-      const url = node.fields?.url
       const filename = node.fields?.filename
-      return `<div class="content-with-media"><img src="${url}" alt="${filename}" /></div>`
+      // const filename =  node.fields?.filename;
+      return `<div class="content-with-media"><img src="${process.env.S3_API}${filename}" /></div>`
     },
   },
 })
@@ -43,56 +44,27 @@ export const Temps: CollectionConfig = {
   },
   fields: [
     {
+      name: 'thumbnail', // required
+      label: 'Thumbnail',
+      type: 'upload', // required
+      relationTo: 'media', // required
+      required: true,
+    },
+    {
       name: 'title',
       label: 'Title',
       type: 'text',
       required: true,
     },
-    // {
-    //   name: 'backgroundImage', // required
-    //   type: 'upload', // required
-    //   relationTo: 'media', // required
-    //   required: true,
-    // },
     {
       name: 'richText',
       type: 'richText',
       editor: lexicalEditor({
-        features: ({ defaultFeatures, rootFeatures }) => [
+        features: ({ defaultFeatures }) => [
           ...defaultFeatures,
           UploadFeature(),
           BlocksFeature({
-            blocks: [
-              {
-                slug: 'contentWithMedia',
-                interfaceName: 'ContentWithMedia',
-                labels: {
-                  singular: 'Content with Media Block',
-                  plural: 'Content with Media Blocks',
-                },
-                fields: [
-                  {
-                    type: 'upload',
-                    name: 'image',
-                    relationTo: 'media',
-                  },
-                  {
-                    type: 'text',
-                    name: 'filename',
-                    admin: {
-                      readOnly: true,
-                    },
-                  },
-                  {
-                    type: 'text',
-                    name: 'url',
-                    admin: {
-                      readOnly: true,
-                    },
-                  },
-                ],
-              },
-            ],
+            blocks: [ContentWithMedia],
           }),
           FixedToolbarFeature(),
         ],
@@ -103,31 +75,53 @@ export const Temps: CollectionConfig = {
       type: 'text',
       admin: { hidden: true },
     },
+    {
+      name: 'thumbnail_url',
+      type: 'text',
+      admin: { hidden: true },
+    },
   ],
   hooks: {
     beforeChange: [
       async ({ data, originalDoc, req }) => {
-        for (const block of data.richText.root.children) {
-          if (block.type === 'block' && block.fields?.image) {
-            try {
-              const mediaDoc = await req.payload.findByID({
-                collection: 'media',
-                id: block.fields.image,
-              })
-              if (mediaDoc) {
-                const imageFilename = mediaDoc.filename
-                const imageUrl = mediaDoc.url
-                block.fields.filename = imageFilename
-                block.fields.url = imageUrl
+        if (data.richText?.root?.children?.length) {
+          for (const block of data.richText.root.children) {
+            if (block.type === 'block' && block.fields?.image) {
+              try {
+                const mediaDoc = await req.payload.findByID({
+                  collection: 'media',
+                  id: block.fields.image,
+                })
+                if (mediaDoc) {
+                  const imageFilename = mediaDoc.filename
+                  const imageUrl = mediaDoc.url
+                  block.fields.filename = imageFilename
+                  block.fields.url = imageUrl
+                }
+              } catch (error) {
+                console.error('Error fetching media:', error)
               }
-            } catch (error) {
-              console.error('Error fetching media:', error)
             }
           }
         }
         if (data.richText !== originalDoc.richText) {
           const html = convertLexicalToHTML({ converters: htmlConverters, data: data.richText })
           data.content = html
+        }
+
+        if (data.thumbnail?.length) {
+          try {
+            const mediaDoc = await req.payload.findByID({
+              collection: 'media',
+              id: data.thumbnail,
+            })
+            if (mediaDoc) {
+              const imageFilename = mediaDoc.filename
+              data.thumbnail_url = `${process.env.S3_API}${imageFilename}`
+            }
+          } catch (error) {
+            console.error('Error fetching media thumbnail:', error)
+          }
         }
         return data
       },
