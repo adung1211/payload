@@ -11,6 +11,8 @@ import { Users } from './collections/Users'
 import { Posts } from './collections/Posts/config'
 import { Temps } from './collections/Temps'
 import { Media } from './collections/Media'
+import { Categories } from './collections/Categories'
+import { Tags } from './collections/Tags'
 import { auth } from 'node_modules/payload/dist/auth/operations/auth'
 
 const filename = fileURLToPath(import.meta.url)
@@ -23,7 +25,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Posts, Temps, Media],
+  collections: [Users, Posts, Temps, Media, Categories, Tags],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

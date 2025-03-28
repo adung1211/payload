@@ -1,26 +1,14 @@
 import type { CollectionConfig } from 'payload'
-import richText from '@/fields/richText'
 import { beforeChangeHook } from './hook'
 
 import {
   BlocksFeature,
-  type DefaultNodeTypes,
   lexicalEditor,
-  lexicalHTMLField,
-  type SerializedBlockNode,
-  type SerializedInlineBlockNode,
-  LinkFeature,
   UploadFeature,
   FixedToolbarFeature,
-  SerializedUploadNode,
 } from '@payloadcms/richtext-lexical'
 
-import {
-  convertLexicalToHTML,
-  type HTMLConvertersFunction,
-} from '@payloadcms/richtext-lexical/html'
 import { ContentWithMedia } from '@/blocks/contentWithMedia'
-import type { ContentWithMedia as ContentWithMediaType } from '@/payload-types'
 
 export const Posts: CollectionConfig = {
   slug: 'Posts',
@@ -32,8 +20,8 @@ export const Posts: CollectionConfig = {
     {
       name: 'thumbnail', // required
       label: 'Thumbnail',
-      type: 'upload', // required
-      relationTo: 'media', // required
+      type: 'upload',
+      relationTo: 'media',
       required: true,
     },
     {
@@ -65,6 +53,41 @@ export const Posts: CollectionConfig = {
       name: 'thumbnail_url',
       type: 'text',
       admin: { hidden: true },
+    },
+    {
+      name: 'author',
+      type: 'text',
+      defaultValue: 'Anh Dũng',
+    },
+    {
+      name: 'view',
+      type: 'number',
+      defaultValue: 0,
+      admin: { hidden: true },
+    },
+    {
+      name: 'like',
+      type: 'number',
+      defaultValue: 0,
+      admin: { hidden: true },
+    },
+    {
+      name: 'comment',
+      type: 'number',
+      defaultValue: 0,
+      admin: { hidden: true },
+    },
+    {
+      name: 'payload_tags',
+      type: 'relationship',
+      relationTo: 'tags',
+      hasMany: true,
+    },
+    {
+      name: 'payload_categories',
+      type: 'relationship',
+      relationTo: 'categories',
+      hasMany: true,
     },
   ],
   hooks: {

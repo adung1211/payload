@@ -1,9 +1,13 @@
+import type { ContentWithMedia as ContentWithMediaType } from '@/payload-types'
+import { CollectionBeforeChangeHook } from 'payload'
+
+import { type DefaultNodeTypes, type SerializedBlockNode } from '@payloadcms/richtext-lexical'
+
 import {
   convertLexicalToHTML,
   type HTMLConvertersFunction,
 } from '@payloadcms/richtext-lexical/html'
 import type { PayloadRequest } from 'payload'
-import type { NodeTypes } from '@/collections/Posts/config'
 
 type NodeTypes = DefaultNodeTypes | SerializedBlockNode<ContentWithMediaType>
 
@@ -17,15 +21,7 @@ const htmlConverters: HTMLConvertersFunction<NodeTypes> = ({ defaultConverters }
   },
 })
 
-export const beforeChangeHook = async ({
-  data,
-  originalDoc,
-  req,
-}: {
-  data: any
-  originalDoc: any
-  req: PayloadRequest
-}) => {
+export const beforeChangeHook: CollectionBeforeChangeHook = async ({ data, req, originalDoc }) => {
   if (data.richText?.root?.children?.length) {
     for (const block of data.richText.root.children) {
       if (block.type === 'block' && block.fields?.image) {
