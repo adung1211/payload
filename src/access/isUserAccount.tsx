@@ -1,8 +1,7 @@
 import type { Access } from 'payload'
-import { User } from '@/payload-types'
 
-const user: Access = ({ req: { user } }) => {
-  if (user?.collection === 'users') {
+const isUserAccount: Access = ({ req: { user } }) => {
+  if (user) {
     if (user?.roles?.includes('admin')) {
       return true
     }
@@ -11,8 +10,7 @@ const user: Access = ({ req: { user } }) => {
       id: { equals: user.id },
     }
   }
-
   return false
 }
 
-export default user
+export default isUserAccount

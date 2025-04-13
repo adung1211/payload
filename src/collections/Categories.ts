@@ -1,16 +1,18 @@
 import type { CollectionConfig } from 'payload'
-import admin from './Users/access/admin'
+import admin from '@/access/admin'
+import user from '@/access/user'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
   access: {
-    read: admin,
+    read: user,
     create: admin,
     update: admin,
     delete: admin,
   },
   admin: {
     useAsTitle: 'name',
+    hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   fields: [
     {

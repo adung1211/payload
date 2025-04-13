@@ -9,8 +9,8 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { ContentWithMedia } from '@/blocks/contentWithMedia'
+import isCreaterOrAdmin from '@/access/isCreaterOrAdmin'
 import { on } from 'events'
-import isCreaterOrAdmin from './access/isCreaterOrAdmin'
 
 export const Posts: CollectionConfig = {
   slug: 'Posts',
@@ -93,14 +93,14 @@ export const Posts: CollectionConfig = {
       admin: { hidden: true },
     },
     {
-      name: 'payload_tags',
+      name: 'tags',
       label: 'Tags',
       type: 'relationship',
       relationTo: 'tags',
       hasMany: true,
     },
     {
-      name: 'payload_categories',
+      name: 'post_categories',
       label: 'Categories',
       type: 'relationship',
       relationTo: 'categories',

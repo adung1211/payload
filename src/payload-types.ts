@@ -169,8 +169,8 @@ export interface Post {
   view?: number | null;
   like?: number | null;
   comment?: number | null;
-  payload_tags?: (string | Tag)[] | null;
-  payload_categories?: (string | Category)[] | null;
+  tags?: (string | Tag)[] | null;
+  post_categories?: (string | Category)[] | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -181,6 +181,7 @@ export interface Post {
 export interface Media {
   id: string;
   alt: string;
+  createdBy?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -349,8 +350,8 @@ export interface PostsSelect<T extends boolean = true> {
   view?: T;
   like?: T;
   comment?: T;
-  payload_tags?: T;
-  payload_categories?: T;
+  tags?: T;
+  post_categories?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -373,6 +374,7 @@ export interface TempsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  createdBy?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

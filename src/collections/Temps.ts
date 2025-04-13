@@ -1,5 +1,4 @@
 import type { CollectionConfig } from 'payload'
-import richText from '@/fields/richText'
 
 import {
   BlocksFeature,
@@ -41,6 +40,7 @@ export const Temps: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'richText'],
+    hidden: true,
   },
   fields: [
     {

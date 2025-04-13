@@ -1,13 +1,13 @@
 import type { CollectionConfig } from 'payload'
-import admin from './Users/access/admin'
+import isCreaterOrAdmin from '@/access/isCreaterOrAdmin'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   access: {
-    read: admin,
-    create: admin,
-    update: admin,
-    delete: admin,
+    read: isCreaterOrAdmin,
+    create: isCreaterOrAdmin,
+    update: isCreaterOrAdmin,
+    delete: isCreaterOrAdmin,
   },
   fields: [
     {
@@ -15,6 +15,23 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'createdBy',
+      type: 'text',
+      admin: { hidden: true },
+    },
   ],
+  admin: {
+    hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
+  },
   upload: true,
+  hooks: {
+    beforeChange: [
+      ({ data, req: { user } }) => {
+        if (user) {
+          data.createdBy = user.id
+        }
+      },
+    ],
+  },
 }
