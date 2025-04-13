@@ -1,22 +1,18 @@
 import type { CollectionConfig } from 'payload'
+import admin from './Users/access/admin'
 
 export const Tags: CollectionConfig = {
   slug: 'tags',
   access: {
-    read: () => true,
-    create: () => true,
-    update: () => true,
-    delete: () => true,
+    read: admin,
+    create: admin,
+    update: admin,
+    delete: admin,
   },
   admin: {
     useAsTitle: 'name',
   },
   fields: [
-    {
-      name: 'id',
-      type: 'text',
-      required: true,
-    },
     {
       name: 'name',
       type: 'text',

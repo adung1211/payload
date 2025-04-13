@@ -9,12 +9,22 @@ import {
 } from '@payloadcms/richtext-lexical'
 
 import { ContentWithMedia } from '@/blocks/contentWithMedia'
+import { on } from 'events'
+import isCreaterOrAdmin from './access/isCreaterOrAdmin'
 
 export const Posts: CollectionConfig = {
   slug: 'Posts',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'richText'],
+  },
+  access: {
+    create: ({ req: { user } }) => {
+      return Boolean(user)
+    },
+    read: isCreaterOrAdmin,
+    update: isCreaterOrAdmin,
+    delete: isCreaterOrAdmin,
   },
   fields: [
     {
@@ -55,6 +65,11 @@ export const Posts: CollectionConfig = {
       admin: { hidden: true },
     },
     {
+      name: 'createdBy',
+      type: 'text',
+      admin: { hidden: true },
+    },
+    {
       name: 'author',
       type: 'text',
       defaultValue: 'Anh Dũng',
@@ -79,12 +94,14 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'payload_tags',
+      label: 'Tags',
       type: 'relationship',
       relationTo: 'tags',
       hasMany: true,
     },
     {
       name: 'payload_categories',
+      label: 'Categories',
       type: 'relationship',
       relationTo: 'categories',
       hasMany: true,

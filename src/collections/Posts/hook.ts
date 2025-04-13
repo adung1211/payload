@@ -63,5 +63,9 @@ export const beforeChangeHook: CollectionBeforeChangeHook = async ({ data, req, 
     }
   }
 
+  if (req.user?.id) {
+    data.createdBy = req.user.id
+  }
+
   return data
 }

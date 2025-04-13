@@ -127,6 +127,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: string;
+  roles?: ('admin' | 'user')[] | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -163,6 +164,7 @@ export interface Post {
   } | null;
   content?: string | null;
   thumbnail_url?: string | null;
+  createdBy?: string | null;
   author?: string | null;
   view?: number | null;
   like?: number | null;
@@ -321,6 +323,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  roles?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -341,6 +344,7 @@ export interface PostsSelect<T extends boolean = true> {
   richText?: T;
   content?: T;
   thumbnail_url?: T;
+  createdBy?: T;
   author?: T;
   view?: T;
   like?: T;
@@ -386,7 +390,6 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "categories_select".
  */
 export interface CategoriesSelect<T extends boolean = true> {
-  id?: T;
   name?: T;
   description?: T;
   slug?: T;
@@ -398,7 +401,6 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "tags_select".
  */
 export interface TagsSelect<T extends boolean = true> {
-  id?: T;
   name?: T;
   description?: T;
   slug?: T;
