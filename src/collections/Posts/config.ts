@@ -44,6 +44,9 @@ export const Posts: CollectionConfig = {
       name: 'richText',
       type: 'richText',
       editor: lexicalEditor({
+        admin: {
+          placeholder: 'Type your content here...',
+        },
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
           UploadFeature(),
