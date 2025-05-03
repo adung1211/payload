@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 import isCreaterOrAdmin from '@/access/isCreaterOrAdmin'
 
 export const Media: CollectionConfig = {
+  labels: { plural: 'Hình ảnh', singular: 'Hình ảnh' },
   slug: 'media',
   access: {
     read: isCreaterOrAdmin,

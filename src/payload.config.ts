@@ -13,8 +13,10 @@ import { Temps } from './collections/Temps'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Tags } from './collections/Tags'
+import { Notifications } from './collections/Notifications/config'
+import { ZUsers } from './collections/ZUser/config'
 import { auth } from 'node_modules/payload/dist/auth/operations/auth'
-import { Component } from 'react'
+import { vi } from '@payloadcms/translations/languages/vi'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,16 +27,20 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    // components: {
-    //   views: {
-    //     createAccount: {
-    //       Component: 'src/components/user/CreateAccount',
-    //       path: '/create-account',
-    //     },
-    //   },
-    // },
+    components: {
+      views: {
+        createAccount: {
+          Component: 'src/components/user/CreateAccount',
+          path: '/create-account',
+        },
+      },
+    },
   },
-  collections: [Users, Posts, Temps, Media, Categories, Tags],
+  i18n: {
+    fallbackLanguage: 'vi',
+    supportedLanguages: { vi },
+  },
+  collections: [Users, Posts, Temps, Media, Categories, Tags, Notifications, ZUsers],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -42,6 +48,7 @@ export default buildConfig({
   },
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
+    transactionOptions: false,
   }),
   sharp,
   plugins: [

@@ -1,8 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import admin from '@/access/admin'
 import user from '@/access/user'
+import { create } from 'domain'
 
 export const Categories: CollectionConfig = {
+  labels: { plural: 'Chuyên mục', singular: 'Chuyên mục' },
   slug: 'categories',
   access: {
     read: user,
@@ -12,6 +14,7 @@ export const Categories: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
+    defaultColumns: ['name', 'createdAt'],
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   fields: [

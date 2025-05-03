@@ -3,6 +3,7 @@ import admin from '@/access/admin'
 import user from '@/access/user'
 
 export const Tags: CollectionConfig = {
+  labels: { plural: 'Chủ đề', singular: 'Chủ đề' },
   slug: 'tags',
   access: {
     read: user,
@@ -12,6 +13,7 @@ export const Tags: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'name',
+    defaultColumns: ['name', 'createdAt'],
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   fields: [

@@ -4,6 +4,7 @@ import admin from '@/access/admin'
 import isUserAccount from '@/access/isUserAccount'
 
 export const Users: CollectionConfig = {
+  labels: { plural: 'Tài khoản', singular: 'Tài khoản' },
   slug: 'users',
   admin: {
     useAsTitle: 'email',

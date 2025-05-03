@@ -13,10 +13,11 @@ import isCreaterOrAdmin from '@/access/isCreaterOrAdmin'
 import { on } from 'events'
 
 export const Posts: CollectionConfig = {
+  labels: { plural: 'Bài viết', singular: 'Bài viết' },
   slug: 'Posts',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'richText'],
+    defaultColumns: ['title', 'createdAt'],
   },
   access: {
     create: ({ req: { user } }) => {
