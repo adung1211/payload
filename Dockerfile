@@ -31,7 +31,6 @@ FROM base AS runner
 WORKDIR /app
 
 # Set environment variables
-ENV NODE_ENV production
 ENV PORT 3000
 
 # Add a non-root user for security
