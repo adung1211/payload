@@ -4,14 +4,17 @@ FROM node:18-alpine AS base
 # Set the working directory
 WORKDIR /app
 
+# Install pnpm globally
+RUN corepack enable && corepack prepare pnpm@10.6.5 --activate
+
 # Install dependencies only when needed
 FROM base AS deps
 # Install libc6-compat for compatibility
 RUN apk add --no-cache libc6-compat
 # Copy lock files and package.json
 COPY package.json pnpm-lock.yaml* ./
-# Enable pnpm and install dependencies
-RUN corepack enable && corepack prepare pnpm@latest --activate && pnpm install --frozen-lockfile
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
 # Build the application
 FROM base AS builder
