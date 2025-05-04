@@ -1,3 +1,4 @@
+# filepath: c:\Users\Admin\Desktop\Work\DoAn\payload\Dockerfile
 # Use the official Node.js image with Alpine for a lightweight base
 FROM node:20-alpine AS base
 
@@ -44,6 +45,7 @@ RUN chown -R nextjs:nodejs /app
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/node_modules ./node_modules
 COPY package.json ./
 
 # Switch to the non-root user
