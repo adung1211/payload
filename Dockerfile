@@ -45,6 +45,7 @@ RUN chown -R nextjs:nodejs /app
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY package.json ./
 
 # Switch to the non-root user
 USER nextjs
