@@ -38,12 +38,6 @@ ENV PORT 3000
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built application and static files
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
 # Set permissions for the Next.js user
 RUN chown -R nextjs:nodejs /app
 
