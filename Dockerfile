@@ -44,7 +44,6 @@ RUN chown -R nextjs:nodejs /app
 # Setup directories and permissions for runtime
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Switch to the non-root user
