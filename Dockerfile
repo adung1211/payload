@@ -1,51 +1,60 @@
-# Use the official Node.js image with Alpine for a lightweight base
-FROM node:18-alpine AS base
+# Base image with Node.js
+FROM node:20-alpine AS base
 
-# Set the working directory
+# Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install pnpm globally
-RUN corepack enable && corepack prepare pnpm@10.6.5 --activate
+# Copy package manager files and install dependencies
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+RUN \
+    if [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm i --frozen-lockfile; \
+    else \
+    echo "Lockfile not found." && exit 1; \
+    fi
 
-# Install dependencies only when needed
-FROM base AS deps
-# Install libc6-compat for compatibility
-RUN apk add --no-cache libc6-compat
-# Copy lock files and package.json
-COPY package.json pnpm-lock.yaml* ./
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Build the application
+# Build the Next.js application
 FROM base AS builder
 WORKDIR /app
-# Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
-# Copy the rest of the application files
 COPY . .
-# Build the application
-RUN pnpm run build
+ENV NEXT_TELEMETRY_DISABLED 1
+RUN \
+    if [ -f pnpm-lock.yaml ]; then \
+    corepack enable pnpm && pnpm run build; \
+    else \
+    echo "Lockfile not found." && exit 1; \
+    fi
 
-# Prepare the production image
+# Final stage: Set up the runtime environment
 FROM base AS runner
 WORKDIR /app
-
-# Set environment variables
 ENV NODE_ENV production
-ENV PORT 3000
+ENV NEXT_TELEMETRY_DISABLED 1
 
-# Add a non-root user for security
+# Create and set the application user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Set permissions for the Next.js user
-RUN chown -R nextjs:nodejs /app
+# Copy the built files from the builder stage
+COPY --from=builder /app/public ./public
+# Change ownership of the public directory to the application user
+RUN chown -R nextjs:nodejs ./public
 
-# Switch to the non-root user
+# Setup directories and permissions for runtime
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Switch to non-root user
 USER nextjs
 
-# Expose the port Railway will use
+# Expose the port the app runs on
 EXPOSE 3000
+ENV PORT 3000
 
-# Start the Next.js application
-CMD ["pnpm", "start"]
+# Command to run the application
+CMD HOSTNAME="0.0.0.0" node server.js
