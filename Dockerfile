@@ -1,4 +1,3 @@
-# filepath: c:\Users\Admin\Desktop\Work\DoAn\payload\Dockerfile
 # Use the official Node.js image with Alpine for a lightweight base
 FROM node:20-alpine AS base
 
@@ -8,23 +7,17 @@ WORKDIR /app
 # Install pnpm globally
 RUN corepack enable && corepack prepare pnpm@10.6.5 --activate
 
-# Install dependencies only when needed
-FROM base AS deps
-# Install libc6-compat for compatibility
-RUN apk add --no-cache libc6-compat
-# Copy lock files and package.json
-COPY package.json pnpm-lock.yaml* ./
 # Install dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+COPY package.json pnpm-lock.yaml* ./
 RUN pnpm install --frozen-lockfile
 
 # Build the application
 FROM base AS builder
 WORKDIR /app
-# Copy dependencies
 COPY --from=deps /app/node_modules ./node_modules
-# Copy the rest of the application files
 COPY . .
-# Build the application
 RUN pnpm run build
 
 # Prepare the production image
@@ -33,29 +26,26 @@ WORKDIR /app
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV PORT 3000
+ENV PORT=3000
 
-# Add a non-root user for security
+# Add a non-root user
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Set permissions for the Next.js user
-RUN chown -R nextjs:nodejs /app
+# Create .next directory and set permissions
+RUN mkdir .next && chown nextjs:nodejs .next
 
-# Setup directories and permissions for runtime
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
+# Copy built files and dependencies with correct ownership
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./
 COPY --from=builder /app/node_modules ./node_modules
-# COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY package.json ./
 
-# Switch to the non-root user
+# Switch to non-root user
 USER nextjs
 
-# Expose the port Railway will use
+# Expose the port
 EXPOSE 3000
 
-# Start the Next.js application
+# Start the application
 CMD ["pnpm", "start"]
