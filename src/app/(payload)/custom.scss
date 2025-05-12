@@ -67,3 +67,23 @@
   background-color: gray;
   color: white;
 }
+
+/* First dashboard group: Quản lý tài khoản */
+.dashboard__group:nth-child(1) .card {
+  background-color: #e3f2fd; /* Light blue */
+}
+
+/* Second dashboard group: Quản lý bài viết */
+.dashboard__group:nth-child(2) .card {
+  background-color: #e8f5e9; /* Light green */
+}
+
+/* Third dashboard group: Zalo token */
+.dashboard__group:nth-child(3) .card {
+  background-color: #fff3e0; /* Light orange */
+}
+
+/* Fourth dashboard group: Quản lý chủ đề và chuyên mục */
+.dashboard__group:nth-child(4) .card {
+  background-color: #f3e5f5; /* Light purple */
+}

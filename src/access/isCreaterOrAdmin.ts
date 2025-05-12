@@ -7,7 +7,7 @@ const isCreaterOrAdmin: Access = ({ req: { user } }) => {
     }
 
     return {
-      createdBy: { equals: user?.id },
+      createdBy: { equals: user?.email },
     }
   }
 

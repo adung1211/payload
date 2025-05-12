@@ -7,8 +7,9 @@ export const Notifications: CollectionConfig = {
   labels: { plural: 'Gửi thông báo', singular: 'Gửi thông báo' },
   slug: 'notifications',
   admin: {
+    group: 'Quản lý tài khoản',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'createdAt', 'isSent'],
+    defaultColumns: ['title', 'createdAt', 'isSent', 'createdBy'],
   },
   access: {
     create: ({ req: { user } }) => {
@@ -38,6 +39,12 @@ export const Notifications: CollectionConfig = {
       relationTo: 'zusers',
       hasMany: true,
       required: true,
+    },
+    {
+      name: 'createdBy',
+      label: 'Người tạo',
+      type: 'text',
+      admin: { hidden: true },
     },
     {
       name: 'isSent',
@@ -72,4 +79,13 @@ export const Notifications: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data, req: { user } }) => {
+        if (user) {
+          data.createdBy = user.email
+        }
+      },
+    ],
+  },
 }

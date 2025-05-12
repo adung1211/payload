@@ -18,8 +18,9 @@ export const Posts: CollectionConfig = {
   labels: { plural: 'Bài viết', singular: 'Bài viết' },
   slug: 'posts',
   admin: {
+    group: 'Quản lý bài viết',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'createdAt'],
+    defaultColumns: ['title', 'createdAt', 'createdBy'],
   },
   access: {
     create: ({ req: { user } }) => {
@@ -70,6 +71,7 @@ export const Posts: CollectionConfig = {
     },
     {
       name: 'createdBy',
+      label: 'Người tạo',
       type: 'text',
       admin: { hidden: true },
     },

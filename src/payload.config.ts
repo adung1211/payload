@@ -39,6 +39,17 @@ export default buildConfig({
         Icon: 'src/graphics/Icon',
       },
     },
+    meta: {
+      title: 'TIST Lab CMS',
+      description: 'Trang quản lý nội dung',
+      icons: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          url: 'https://i.imgur.com/b6E62hZ.png',
+        },
+      ],
+    },
   },
   i18n: {
     fallbackLanguage: 'vi',

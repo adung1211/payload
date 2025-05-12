@@ -7,6 +7,7 @@ export const Users: CollectionConfig = {
   labels: { plural: 'Tài khoản', singular: 'Tài khoản' },
   slug: 'users',
   admin: {
+    group: 'Quản lý tài khoản',
     useAsTitle: 'email',
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },

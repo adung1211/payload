@@ -19,12 +19,14 @@ export const Media: CollectionConfig = {
     },
     {
       name: 'createdBy',
+      label: 'Người tạo',
       type: 'text',
       admin: { hidden: true },
     },
   ],
   admin: {
-    defaultColumns: ['filename', 'createdAt', 'updatedAt'],
+    group: 'Quản lý bài viết',
+    defaultColumns: ['filename', 'createdAt', 'createdBy'],
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   upload: true,
@@ -32,7 +34,7 @@ export const Media: CollectionConfig = {
     beforeChange: [
       ({ data, req: { user } }) => {
         if (user) {
-          data.createdBy = user.id
+          data.createdBy = user.email
         }
       },
     ],

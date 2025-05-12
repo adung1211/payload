@@ -11,6 +11,7 @@ export const Tokens: CollectionConfig = {
     delete: admin,
   },
   admin: {
+    group: 'Zalo token',
     useAsTitle: 'id',
     defaultColumns: ['id'],
   },

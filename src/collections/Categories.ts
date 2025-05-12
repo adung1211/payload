@@ -13,6 +13,7 @@ export const Categories: CollectionConfig = {
     delete: admin,
   },
   admin: {
+    group: 'Quản lý chủ đề và chuyên mục',
     useAsTitle: 'name',
     defaultColumns: ['name', 'createdAt'],
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,

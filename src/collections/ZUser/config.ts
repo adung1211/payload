@@ -8,6 +8,7 @@ export const ZUsers: CollectionConfig = {
   labels: { plural: 'Người dùng Zalo', singular: 'Người dùng Zalo' },
   slug: 'zusers',
   admin: {
+    group: 'Quản lý tài khoản',
     useAsTitle: 'name',
     defaultColumns: ['name', 'zid'],
   },

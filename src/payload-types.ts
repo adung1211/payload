@@ -241,6 +241,7 @@ export interface Notification {
   title: string;
   content: string;
   send_to: (string | Zuser)[];
+  createdBy?: string | null;
   isSent?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -431,6 +432,7 @@ export interface NotificationsSelect<T extends boolean = true> {
   title?: T;
   content?: T;
   send_to?: T;
+  createdBy?: T;
   isSent?: T;
   updatedAt?: T;
   createdAt?: T;
