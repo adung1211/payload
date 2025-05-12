@@ -87,3 +87,23 @@
 .dashboard__group:nth-child(4) .card {
   background-color: #f3e5f5; /* Light purple */
 }
+
+.selected--draft,
+.selected--published {
+  width: 90px; /* adjust as needed */
+  display: inline-block;
+  text-align: center;
+  padding: 6px 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.selected--draft {
+  background-color: rgb(154, 154, 147);
+  color: black;
+}
+
+.selected--published {
+  background-color: green;
+  color: white;
+}

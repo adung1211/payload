@@ -20,7 +20,7 @@ export const Posts: CollectionConfig = {
   admin: {
     group: 'Quản lý bài viết',
     useAsTitle: 'title',
-    defaultColumns: ['title', 'createdAt', 'createdBy'],
+    defaultColumns: ['title', 'createdAt', 'createdBy', '_status'],
   },
   access: {
     create: ({ req: { user } }) => {
@@ -29,6 +29,9 @@ export const Posts: CollectionConfig = {
     read: isCreaterOrAdmin,
     update: isCreaterOrAdmin,
     delete: isCreaterOrAdmin,
+  },
+  versions: {
+    drafts: true,
   },
   fields: [
     {
