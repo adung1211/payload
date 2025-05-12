@@ -68,8 +68,8 @@ export interface Config {
   blocks: {};
   collections: {
     users: User;
-    Posts: Post;
-    temps: Temp;
+    posts: Post;
+    tokens: Token;
     media: Media;
     categories: Category;
     tags: Tag;
@@ -82,8 +82,8 @@ export interface Config {
   collectionsJoins: {};
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
-    Posts: PostsSelect<false> | PostsSelect<true>;
-    temps: TempsSelect<false> | TempsSelect<true>;
+    posts: PostsSelect<false> | PostsSelect<true>;
+    tokens: TokensSelect<false> | TokensSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
     tags: TagsSelect<false> | TagsSelect<true>;
@@ -145,7 +145,7 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Posts".
+ * via the `definition` "posts".
  */
 export interface Post {
   id: string;
@@ -224,29 +224,11 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "temps".
+ * via the `definition` "tokens".
  */
-export interface Temp {
+export interface Token {
   id: string;
-  thumbnail: string | Media;
-  title: string;
-  richText?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  content?: string | null;
-  thumbnail_url?: string | null;
+  token: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -271,7 +253,6 @@ export interface Zuser {
   id: string;
   name: string;
   zid: string;
-  location: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -287,12 +268,12 @@ export interface PayloadLockedDocument {
         value: string | User;
       } | null)
     | ({
-        relationTo: 'Posts';
+        relationTo: 'posts';
         value: string | Post;
       } | null)
     | ({
-        relationTo: 'temps';
-        value: string | Temp;
+        relationTo: 'tokens';
+        value: string | Token;
       } | null)
     | ({
         relationTo: 'media';
@@ -374,7 +355,7 @@ export interface UsersSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "Posts_select".
+ * via the `definition` "posts_select".
  */
 export interface PostsSelect<T extends boolean = true> {
   thumbnail?: T;
@@ -394,14 +375,10 @@ export interface PostsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "temps_select".
+ * via the `definition` "tokens_select".
  */
-export interface TempsSelect<T extends boolean = true> {
-  thumbnail?: T;
-  title?: T;
-  richText?: T;
-  content?: T;
-  thumbnail_url?: T;
+export interface TokensSelect<T extends boolean = true> {
+  token?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -465,7 +442,6 @@ export interface NotificationsSelect<T extends boolean = true> {
 export interface ZusersSelect<T extends boolean = true> {
   name?: T;
   zid?: T;
-  location?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -500,18 +476,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ContentWithMedia".
- */
-export interface ContentWithMedia {
-  image?: (string | null) | Media;
-  filename?: string | null;
-  url?: string | null;
-  id?: string | null;
-  blockName?: string | null;
-  blockType: 'contentWithMedia';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

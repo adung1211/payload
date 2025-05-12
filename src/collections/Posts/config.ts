@@ -6,6 +6,8 @@ import {
   lexicalEditor,
   UploadFeature,
   FixedToolbarFeature,
+  LinkFeature,
+  HeadingFeature,
 } from '@payloadcms/richtext-lexical'
 
 import { ContentWithMedia } from '@/blocks/contentWithMedia'
@@ -14,7 +16,7 @@ import { on } from 'events'
 
 export const Posts: CollectionConfig = {
   labels: { plural: 'Bài viết', singular: 'Bài viết' },
-  slug: 'Posts',
+  slug: 'posts',
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'createdAt'],
@@ -48,12 +50,10 @@ export const Posts: CollectionConfig = {
         admin: {
           placeholder: 'Type your content here...',
         },
-        features: ({ defaultFeatures }) => [
-          ...defaultFeatures,
+        features: ({ rootFeatures }) => [
+          ...rootFeatures,
+          HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),
           UploadFeature(),
-          BlocksFeature({
-            blocks: [ContentWithMedia],
-          }),
           FixedToolbarFeature(),
         ],
       }),

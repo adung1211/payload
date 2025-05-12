@@ -30,11 +30,11 @@ export const ZUsers: CollectionConfig = {
       label: 'Zalo ID',
       required: true,
     },
-    {
-      name: 'location',
-      type: 'text',
-      label: 'Khu vực',
-      required: true,
-    },
+    // {
+    //   name: 'location',
+    //   type: 'text',
+    //   label: 'Khu vực',
+    //   required: true,
+    // },
   ],
 }

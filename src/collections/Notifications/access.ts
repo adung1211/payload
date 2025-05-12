@@ -1,14 +1,14 @@
 import type { Access } from 'payload'
 
 const notSent: Access = ({ req: { user } }) => {
-  if (user?.roles?.includes('admin')) {
-    return true
+  if (user) {
+    return {
+      createdBy: { equals: user?.id },
+      isSent: { equals: 'Chưa gửi' },
+    }
   }
 
-  return {
-    createdBy: { equals: user?.id },
-    isSent: { equals: 'Chưa gửi' },
-  }
+  return false
 }
 
 export default notSent

@@ -15,8 +15,10 @@ export const Notifications: CollectionConfig = {
       return Boolean(user)
     },
     read: isCreaterOrAdmin,
-    update: notSent,
-    delete: notSent,
+    update: () => {
+      return false
+    },
+    delete: isCreaterOrAdmin,
   },
   fields: [
     {

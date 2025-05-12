@@ -9,7 +9,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users/config'
 import { Posts } from './collections/Posts/config'
-import { Temps } from './collections/Temps'
+import { Tokens } from './collections/Tokens'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Tags } from './collections/Tags'
@@ -34,13 +34,17 @@ export default buildConfig({
           path: '/create-account',
         },
       },
+      graphics: {
+        Logo: 'src/graphics/Logo',
+        Icon: 'src/graphics/Icon',
+      },
     },
   },
   i18n: {
     fallbackLanguage: 'vi',
     supportedLanguages: { vi },
   },
-  collections: [Users, Posts, Temps, Media, Categories, Tags, Notifications, ZUsers],
+  collections: [Users, Posts, Tokens, Media, Categories, Tags, Notifications, ZUsers],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

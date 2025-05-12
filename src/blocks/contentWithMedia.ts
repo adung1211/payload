@@ -1,22 +1,17 @@
 import { Block } from 'payload'
-import {
-  BlocksFeature,
-  HTMLConverterFeature,
-  lexicalEditor,
-  lexicalHTML,
-} from '@payloadcms/richtext-lexical'
 
 export const ContentWithMedia: Block = {
   slug: 'contentWithMedia',
   interfaceName: 'ContentWithMedia',
   labels: {
-    singular: 'Content with Media Block',
-    plural: 'Content with Media Blocks',
+    singular: 'Thêm hình ảnh',
+    plural: 'Thêm hình ảnh',
   },
   fields: [
     {
       type: 'upload',
       name: 'image',
+      label: 'Chọn hình ảnh',
       relationTo: 'media',
     },
     {

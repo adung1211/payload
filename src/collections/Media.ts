@@ -14,6 +14,7 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
+      label: 'Chú thích',
       required: true,
     },
     {
@@ -23,6 +24,7 @@ export const Media: CollectionConfig = {
     },
   ],
   admin: {
+    defaultColumns: ['filename', 'createdAt', 'updatedAt'],
     hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   upload: true,
