@@ -13,7 +13,7 @@ export const Tokens: CollectionConfig = {
   admin: {
     group: 'Zalo token',
     useAsTitle: 'id',
-    defaultColumns: ['id'],
+    defaultColumns: ['id', 'updatedAt'],
   },
   fields: [
     {
