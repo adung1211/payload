@@ -27,7 +27,7 @@ export const Media: CollectionConfig = {
   admin: {
     group: 'Quản lý bài viết',
     defaultColumns: ['filename', 'createdAt', 'createdBy'],
-    hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
+    // hidden: ({ user }) => Boolean(user?.roles.includes('admin')) === false,
   },
   upload: true,
   hooks: {
