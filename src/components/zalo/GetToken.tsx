@@ -19,10 +19,6 @@ export default async function GetToken(): Promise<string> {
   body.append('app_id', appId)
   body.append('grant_type', 'refresh_token')
 
-  console.log('ZALO_SECRET_KEY:', secretKey)
-  console.log('ZALO_APP_ID:', appId)
-  console.log('Refresh token from DB:', token.docs[0]?.token)
-
   try {
     const response = await fetch(url, {
       method: 'POST',
@@ -34,8 +30,6 @@ export default async function GetToken(): Promise<string> {
     })
 
     const data = await response.json()
-
-    console.log(data)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch access token: ${data.error || 'Unknown error'}`)
